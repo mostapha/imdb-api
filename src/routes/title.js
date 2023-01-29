@@ -37,12 +37,12 @@ title.get("/:id", async (c) => {
 
     // id
     response.id = id;
-
-    // review
-    response.review_api_path = `/reviews/${id}`;
-
-    // imdb link
-    response.imdb = `https://www.imdb.com/title/${id}`;
+    
+    // // review
+    // response.review_api_path = `/reviews/${id}`;
+    //
+    // // imdb link
+    // response.imdb = `https://www.imdb.com/title/${id}`;
 
     // content type
     response.contentType = schema["@type"];
@@ -58,64 +58,58 @@ title.get("/:id", async (c) => {
     // response.plot = getNode(dom, "span", "plot-l").innerHTML;
     response.plot = entityDecoder(schema.description, { level: "html5" });
 
-    // rating
-    response.rating = {
-      count: schema.aggregateRating.ratingCount,
-      star: schema.aggregateRating.ratingValue,
-    };
+    //
+    // // rating
+    // response.rating = {
+    //   count: schema.aggregateRating.ratingCount,
+    //   star: schema.aggregateRating.ratingValue,
+    // };
+    //
+    // // content rating
+    // response.contentRating = schema.contentRating;
+    //
+    // // genre
+    // response.genre = schema.genre.map((e) =>
+    //   entityDecoder(e, { level: "html5" })
+    // );
 
-    // content rating
-    response.contentRating = schema.contentRating;
+    // date
+    response.datePublished = schema.datePublished;
+    
+    // // actors
+    // try {
+    //   response.actors = schema.actor.map((e) =>
+    //     entityDecoder(e.name, { level: "html5" })
+    //   );
+    // } catch (_) {
+    //   response.actors = [];
+    // }
+    //
+    // // director
+    // try {
+    //   response.directors = schema.director.map((e) =>
+    //     entityDecoder(e.name, { level: "html5" })
+    //   );
+    // } catch (_) {
+    //   response.directors = [];
+    // }
 
-    // genre
-    response.genre = schema.genre.map((e) =>
-      entityDecoder(e, { level: "html5" })
-    );
-
-    // year and runtime
-    try {
-      let metadata = getNode(dom, "ul", "hero-title-block__metadata");
-      response.year = metadata.firstChild.firstChild.innerHTML;
-      response.runtime = metadata.lastChild.innerHTML
-        .split("<!-- -->")
-        .join("");
-    } catch (_) {
-      if (!response.year) response.year = null;
-      response.runtime = null;
-    }
-    // actors
-    try {
-      response.actors = schema.actor.map((e) =>
-        entityDecoder(e.name, { level: "html5" })
-      );
-    } catch (_) {
-      response.actors = [];
-    }
-    // director
-    try {
-      response.directors = schema.director.map((e) =>
-        entityDecoder(e.name, { level: "html5" })
-      );
-    } catch (_) {
-      response.directors = [];
-    }
-
-    // top credits
-    try {
-      let top_credits = getNode(dom, "div", "title-pc-expanded-section")
-        .firstChild.firstChild;
-
-      response.top_credits = top_credits.childNodes.map((e) => {
-        return {
-          name: e.firstChild.textContent,
-          value: e.childNodes[1].firstChild.childNodes.map((e) =>
-            entityDecoder(e.textContent, { level: "html5" })
-          ),
-        };
-      });
-    } catch (_) {
-      response.top_credits = [];
-    }
+    // // top credits
+    // try {
+    //   let top_credits = getNode(dom, "div", "title-pc-expanded-section")
+    //     .firstChild.firstChild;
+    //
+    //   response.top_credits = top_credits.childNodes.map((e) => {
+    //     return {
+    //       name: e.firstChild.textContent,
+    //       value: e.childNodes[1].firstChild.childNodes.map((e) =>
+    //         entityDecoder(e.textContent, { level: "html5" })
+    //       ),
+    //     };
+    //   });
+    // } catch (_) {
+    //   response.top_credits = [];
+    // }
 
     try {
       if (["TVSeries"].includes(response.contentType)) {
